@@ -1,7 +1,6 @@
 package no.birkeland.musiq.REST.dto;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 

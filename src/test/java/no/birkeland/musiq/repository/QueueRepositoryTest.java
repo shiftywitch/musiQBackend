@@ -1,7 +1,6 @@
 package no.birkeland.musiq.repository;
 
-import lombok.AllArgsConstructor;
-import no.birkeland.musiq.REST.dto.CreateQueueDto;
+import no.birkeland.musiq.REST.dto.QueueDto;
 import no.birkeland.musiq.REST.dto.QueueItemDto;
 import no.birkeland.musiq.domain.Queue;
 import no.birkeland.musiq.domain.QueueItem;
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +21,7 @@ class QueueRepositoryTest {
 
     @Test
     void getQueueById() {
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
+        Long id = queueRepository.createQueue(new QueueDto("TestQueue"));
         Queue queue = queueRepository.getQueueById(id);
 
         assertThat(queue.getTitle()).isEqualTo("TestQueue");
@@ -36,9 +33,9 @@ class QueueRepositoryTest {
 
     @Test
     void getQueues() {
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
-        Long id2 = queueRepository.createQueue(new CreateQueueDto("TestQueue2"));
-        Long id3 = queueRepository.createQueue(new CreateQueueDto("TestQueue3"));
+        Long id = queueRepository.createQueue(new QueueDto("TestQueue"));
+        Long id2 = queueRepository.createQueue(new QueueDto("TestQueue2"));
+        Long id3 = queueRepository.createQueue(new QueueDto("TestQueue3"));
 
         List<Queue> queues = queueRepository.getQueues();
 
@@ -52,7 +49,7 @@ class QueueRepositoryTest {
 
     @Test
     void createQueue() {
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
+        Long id = queueRepository.createQueue(new QueueDto("TestQueue"));
         Queue queue = queueRepository.getQueueById(id);
 
         assertThat(queue.getTitle()).isEqualTo("TestQueue");
@@ -65,7 +62,7 @@ class QueueRepositoryTest {
 
     @Test
     void deleteQueueById() {
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
+        Long id = queueRepository.createQueue(new QueueDto("TestQueue"));
         Queue queue = queueRepository.getQueueById(id);
         Boolean result = queueRepository.deleteQueueById(id);
 
@@ -78,48 +75,69 @@ class QueueRepositoryTest {
 
     @Test
     void getQueueitemsById() {
+        Long queueId = queueRepository.createQueue(new QueueDto("TestQueue"));
+
         QueueItemDto queueItemDto = new QueueItemDto(
+
                 "TestTitle",
                 "Description",
-                "https://www.youtube.com/watch?v=XXcKzltuaSk"
+                "https://www.youtube.com/watch?v=XXcKzltuaSk",
+                queueId
         );
         QueueItemDto queueItemDto2 = new QueueItemDto(
                 "TestTitle2",
                 "Description2",
-                "https://www.youtube.com/watch?v=XXcKzltuaSk"
+                "https://www.youtube.com/watch?v=XXcKzltuaSk",
+                queueId
         );
+        queueRepository.addItemToQueue(queueItemDto);
+        queueRepository.addItemToQueue(queueItemDto2);
 
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
-        queueRepository.addItemToQueue(id, queueItemDto);
-        queueRepository.addItemToQueue(id, queueItemDto2);
-
-        List<QueueItem> queueItems = queueRepository.getQueueItemsById(id);
+        List<QueueItem> queueItems = queueRepository.getQueueItemsById(queueId);
 
         assertThat(queueItems.size()).isEqualTo(2);
         assertThat(queueItems.get(1).getDescription()).isEqualTo("Description2");
 
-        queueRepository.deleteQueueById(id);
+        queueRepository.deleteQueueById(queueId);
     }
 
     @Test
     void addItemToQueue() {
 
+        Long queueId = queueRepository.createQueue(new QueueDto("TestQueue"));
         QueueItemDto queueItemDto = new QueueItemDto(
                 "TestTitle",
                 "Description",
-                "https://www.youtube.com/watch?v=XXcKzltuaSk"
+                "https://www.youtube.com/watch?v=XXcKzltuaSk",
+                queueId
         );
 
-        Long id = queueRepository.createQueue(new CreateQueueDto("TestQueue"));
-        Long queueItemId = queueRepository.addItemToQueue(id, queueItemDto);
-
-        Queue queue = queueRepository.getQueueById(id);
+        Long queueItemId = queueRepository.addItemToQueue(queueItemDto);
+        Queue queue = queueRepository.getQueueById(queueId);
 
         assertThat(queue.getQueueItems().get(0).toDto().getDescription()).isEqualTo(queueItemDto.getDescription());
         assertThat(queue.getQueueItems().get(0).toDto().getUrl()).isEqualTo(queueItemDto.getUrl());
         assertThat(queue.getQueueItems().get(0).toDto().getTitle()).isEqualTo(queueItemDto.getTitle());
         assertThat(queue.getQueueItems().get(0).toDto().getQueueId()).isEqualTo(queueItemDto.getQueueId());
 
-        queueRepository.deleteQueueById(id);
+        queueRepository.deleteQueueById(queueId);
+    }
+
+    @Test
+    void deleteItemFromQueue() {
+        Long queueId = queueRepository.createQueue(new QueueDto("TestQueue"));
+        QueueItemDto queueItemDto = new QueueItemDto(
+                "TestTitle",
+                "Description",
+                "https://www.youtube.com/watch?v=XXcKzltuaSk",
+                queueId
+        );
+        Long queueItemId = queueRepository.addItemToQueue(queueItemDto);
+
+        Boolean deleted = queueRepository.deleteItemFromQueue(queueId, queueItemId);
+
+        assertTrue(deleted);
+
+        queueRepository.deleteQueueById(queueId);
     }
 }

@@ -1,6 +1,6 @@
 package no.birkeland.musiq.repository.mapper;
 
-import no.birkeland.musiq.REST.dto.CreateQueueDto;
+import no.birkeland.musiq.REST.dto.QueueDto;
 import no.birkeland.musiq.domain.Queue;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -20,7 +20,7 @@ public class QueueMapper implements RowMapper<Queue> {
         return queue;
     }
 
-    public static Map<String, String> getParamMap(CreateQueueDto queueDto) {
+    public static Map<String, String> getParamMap(QueueDto queueDto) {
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("title", queueDto.getTitle());
 

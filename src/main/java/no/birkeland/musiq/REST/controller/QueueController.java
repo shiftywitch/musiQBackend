@@ -1,7 +1,6 @@
 package no.birkeland.musiq.REST.controller;
 
 import lombok.AllArgsConstructor;
-import no.birkeland.musiq.REST.dto.CreateQueueDto;
 import no.birkeland.musiq.REST.dto.QueueDto;
 import no.birkeland.musiq.REST.dto.QueueItemDto;
 import no.birkeland.musiq.service.QueueService;
@@ -11,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController()
+@CrossOrigin("*")
+@RequestMapping("/api/queues")
 @AllArgsConstructor
-@RestController
-@RequestMapping(path = "/api/queues")
 public class QueueController {
 
     final QueueService queueService;
@@ -31,8 +31,8 @@ public class QueueController {
     }
 
     @PostMapping(path = "/newQueue")
-    public ResponseEntity<?> createQueue(@RequestBody CreateQueueDto createQueueDto) {
-        Long response = queueService.createQueue(createQueueDto);
+    public ResponseEntity<?> createQueue(@RequestBody QueueDto queueDto) {
+        Long response = queueService.createQueue(queueDto);
         return new ResponseEntity<Long>(response, HttpStatus.CREATED);
     }
 
@@ -42,10 +42,9 @@ public class QueueController {
         return new ResponseEntity<Boolean>(response, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/{queueId}/addItemToQueue")
-    public ResponseEntity<?> addItemToQueue(@PathVariable Long queueId,
-                                            @RequestBody QueueItemDto queueItemDto) {
-        Long response = queueService.addItemToQueue(queueId, queueItemDto);
+    @PostMapping(path = "/addItemToQueue")
+    public ResponseEntity<?> addItemToQueue(@RequestBody QueueItemDto queueItemDto) {
+        Long response = queueService.addItemToQueue(queueItemDto);
         return new ResponseEntity<Long>(response, HttpStatus.CREATED);
     }
 

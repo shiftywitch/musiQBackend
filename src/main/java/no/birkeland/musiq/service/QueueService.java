@@ -1,7 +1,6 @@
 package no.birkeland.musiq.service;
 
 import lombok.AllArgsConstructor;
-import no.birkeland.musiq.REST.dto.CreateQueueDto;
 import no.birkeland.musiq.REST.dto.QueueDto;
 import no.birkeland.musiq.REST.dto.QueueItemDto;
 import no.birkeland.musiq.domain.Queue;
@@ -24,16 +23,16 @@ public class QueueService {
         return queueRepository.getQueues().stream().map(Queue::toDto).collect(Collectors.toList());
     }
 
-    public Long createQueue(CreateQueueDto createQueueDto) {
-        return queueRepository.createQueue(createQueueDto);
+    public Long createQueue(QueueDto queueDto) {
+        return queueRepository.createQueue(queueDto);
     }
 
     public Boolean deleteQueueById(Long id) {
         return queueRepository.deleteQueueById(id);
     }
 
-    public Long addItemToQueue(Long queueId, QueueItemDto queueItemDto) {
-        return queueRepository.addItemToQueue(queueId, queueItemDto);
+    public Long addItemToQueue(QueueItemDto queueItemDto) {
+        return queueRepository.addItemToQueue(queueItemDto);
     }
 
     public Boolean deleteItemFromQueue(Long queueId, Long itemId) {

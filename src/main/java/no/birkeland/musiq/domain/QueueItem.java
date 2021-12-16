@@ -30,6 +30,7 @@ public class QueueItem {
                 queueItemDto.getQueueItemId(),
                 queueItemDto.getTitle(),
                 queueItemDto.getDescription(),
-                queueItemDto.getUrl());
+                queueItemDto.getUrl(),
+                queueItemDto.getQueueId());
     }
 }

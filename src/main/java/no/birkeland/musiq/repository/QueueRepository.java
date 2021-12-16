@@ -1,13 +1,12 @@
 package no.birkeland.musiq.repository;
 
 import lombok.AllArgsConstructor;
-import no.birkeland.musiq.REST.dto.CreateQueueDto;
+import no.birkeland.musiq.REST.dto.QueueDto;
 import no.birkeland.musiq.REST.dto.QueueItemDto;
 import no.birkeland.musiq.domain.Queue;
 import no.birkeland.musiq.domain.QueueItem;
 import no.birkeland.musiq.repository.mapper.QueueItemMapper;
 import no.birkeland.musiq.repository.mapper.QueueMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -42,11 +41,11 @@ public class QueueRepository  {
         return queues;
     }
 
-    public Long createQueue(CreateQueueDto createQueueDto) {
+    public Long createQueue(QueueDto queueDto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("queue").usingGeneratedKeyColumns("id");
         return simpleJdbcInsert
-                .executeAndReturnKey(QueueMapper.getParamMap(createQueueDto)).longValue();
+                .executeAndReturnKey(QueueMapper.getParamMap(queueDto)).longValue();
     }
 
     public Boolean deleteQueueById(Long id) {
@@ -61,19 +60,19 @@ public class QueueRepository  {
         return jdbcTemplate.query(sql, new QueueItemMapper(), id);
     }
 
-    public Long addItemToQueue(Long queueId, QueueItemDto queueItemDto) {
+    public Long addItemToQueue(QueueItemDto queueItemDto) {
         //throws if queue is not found
-        getQueueById(queueId);
+        getQueueById(queueItemDto.getQueueId());
 
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("queueitem").usingGeneratedKeyColumns("id");
 
         return simpleJdbcInsert
-                .executeAndReturnKey(QueueItemMapper.getParamMap(queueItemDto, queueId)).longValue();
+                .executeAndReturnKey(QueueItemMapper.getParamMap(queueItemDto)).longValue();
     }
 
     public Boolean deleteItemFromQueue(Long queueId, Long itemId) {
         String sql = "DELETE FROM queueitem WHERE id = ? AND queueId = ?";
-        return jdbcTemplate.update(sql, queueId, itemId) == 1;
+        return jdbcTemplate.update(sql, itemId, queueId) == 1;
     }
 }
