@@ -10,6 +10,6 @@ CREATE TABLE QueueItem (
                            id SERIAL PRIMARY KEY,
                            title VARCHAR(100) NOT NULL,
                            description TEXT,
-                           urls TEXT [],
+                           url VARCHAR(255),
                            queueId INTEGER REFERENCES Queue(id)
 );
