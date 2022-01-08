@@ -5,7 +5,11 @@ import no.birkeland.musiq.REST.dto.QueueItemDto;
 import no.birkeland.musiq.domain.Queue;
 import no.birkeland.musiq.repository.QueueRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,13 +21,13 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class QueueServiceTest {
 
-    @MockBean
+    @Mock
     private QueueRepository queueRepository;
 
-    @Autowired
+    @InjectMocks
     private QueueService queueService;
 
     @Test
