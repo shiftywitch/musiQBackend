@@ -14,6 +14,7 @@ public class QueueMapper implements RowMapper<Queue> {
     @Override
     public Queue mapRow(ResultSet rs, int rowNum) throws SQLException {
         Queue queue = new Queue();
+        queue.setOwnerId(rs.getString("ownerId"));
         queue.setQueueId(rs.getLong("id"));
         queue.setTitle(rs.getString("title"));
 
@@ -22,6 +23,7 @@ public class QueueMapper implements RowMapper<Queue> {
 
     public static Map<String, String> getParamMap(QueueDto queueDto) {
         Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("ownerId", queueDto.getOwnerId());
         paramMap.put("title", queueDto.getTitle());
 
         return paramMap;

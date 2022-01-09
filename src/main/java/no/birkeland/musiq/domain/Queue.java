@@ -16,18 +16,22 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Queue {
 
+    private String ownerId;
     private Long queueId;
     private String title;
     private List<QueueItem> queueItems;
 
     public QueueDto toDto() {
-        return new QueueDto(queueId,
+        return new QueueDto(
+                ownerId,
+                queueId,
                 title,
                 queueItems.stream().map(QueueItem::toDto).collect(Collectors.toList()));
     }
 
     public static Queue toQueue(QueueDto queueDto) {
         return new Queue(
+                queueDto.getOwnerId(),
                 queueDto.getQueueId(),
                 queueDto.getTitle(),
                 queueDto.getQueueItems().stream().map(QueueItem::toQueueItem).collect(Collectors.toList()));
