@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,18 +33,20 @@ class QueueControllerTest {
     public QueueService queueService;
 
     @Autowired
-    public TestRestTemplate testRestTemplate;
-
-    @Autowired
     public MockMvc mockMvc;
 
     @Autowired
     public Gson gson;
 
+    @Test
+    void shouldBeUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/queues"))
+                .andExpect(status().isUnauthorized());
+    }
 
     @Test
-    void getQueueById2() throws Exception {
-        QueueDto expected = new QueueDto(1L, "TestTitle", new ArrayList<>());
+    void getQueueById() throws Exception {
+        QueueDto expected = new QueueDto("1234", 1L, "TestTitle", new ArrayList<>());
 
         Mockito.when(queueService.getQueueById(1L)).thenReturn(expected);
 
@@ -60,11 +61,11 @@ class QueueControllerTest {
     @Test
     void getQueues() throws Exception {
         List<QueueDto> expectedQueues = Arrays.asList(
-                new QueueDto(1L, "TestTitle", new ArrayList<>()),
-                new QueueDto(2L, "TestTitle", new ArrayList<>())
+                new QueueDto("1234", 1L, "TestTitle", new ArrayList<>()),
+                new QueueDto("1234", 2L, "TestTitle", new ArrayList<>())
         );
 
-        Mockito.when(queueService.getQueues()).thenReturn(expectedQueues);
+        Mockito.when(queueService.getQueuesByUserId()).thenReturn(expectedQueues);
 
         mockMvc.perform(get("/api/queues")
                 .with(jwt()))

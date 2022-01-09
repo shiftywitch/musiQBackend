@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController()
 @CrossOrigin("*")
 @RequestMapping("/api/queues")
@@ -26,7 +27,7 @@ public class QueueController {
 
     @GetMapping
     public ResponseEntity<?> getQueues() {
-        List<QueueDto> response = queueService.getQueues();
+        List<QueueDto> response = queueService.getQueuesByUserId();
         return new ResponseEntity<List<QueueDto>>(response, HttpStatus.OK);
     }
 
@@ -50,7 +51,7 @@ public class QueueController {
 
     @DeleteMapping(path = "/{queueId}/deleteItem_{itemId}")
     public ResponseEntity<?> deleteItemFromQueue(@PathVariable Long queueId,
-                                               @PathVariable Long itemId) {
+                                                 @PathVariable Long itemId) {
         Boolean response = queueService.deleteItemFromQueue(queueId, itemId);
         return new ResponseEntity<Boolean>(response, HttpStatus.OK);
     }

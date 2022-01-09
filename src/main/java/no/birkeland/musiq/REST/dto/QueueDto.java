@@ -8,6 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class QueueDto {
+    private String ownerId;
     private Long queueId;
     @NonNull
     private String title;
